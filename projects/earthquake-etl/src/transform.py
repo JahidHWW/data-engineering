@@ -1,10 +1,20 @@
 def transform_earthquake(row):
-    if row['mag'] == "" or row['depth'] == "":
+    row_id = row.get('id')
+    mag = row.get('mag')
+    depth = row.get('depth')
+    row_place = row.get('place')
+
+    if row_id is None or mag is None or depth is None or row_place is None:
         return None
-    row_id = row['id']
-    row_mag = float(row['mag'])
-    row_depth = float(row['depth'])
-    row_place = row['place']
+    
+    if row_id == '' or mag == '' or depth == '' or row_place == '':
+        return None
+    
+    try:
+        row_mag = float(mag)
+        row_depth = float(depth)
+    except ValueError:
+        return None
 
     transformed_row = {
         'id' : row_id,
@@ -15,14 +25,13 @@ def transform_earthquake(row):
     
     return transformed_row
 
-sample = {
+if __name__ == '__main__':
+    sample = {
     'id': 'us12345',
     'mag': '4.5',
     'depth': '',
     'place': 'Alaska'
-}
-
-if __name__ == "__main__":
+    }
     result = transform_earthquake(sample)
     if result is None:
         print('Record rejected: invalid or missing data')
